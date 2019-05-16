@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<title>WS Chat</title>
+<head>
+    <!-- スクリプト -->
+    <script>
+        function send() {
+            ws.send(document.getElementById('msg').value);
+            document.getElementById("messages").innerHTML += "<div id=\"sendMes\">>> " + document.getElementById('msg').value + "</div>";
+        } 
+        function makeText() {
+            var authCode_  = document.getElementById('authCode_').value;
+            var name_  = document.getElementById('name_').value;
+            var steamID_ = document.getElementById('steamID_').value;
+            var room_  = document.getElementById('room_').value;
+            var order_ = document.getElementById('order_').value;
+            var value_ = document.getElementById('value_').value;
+            var obj = {authCode : authCode_, name : name_, steamID : steamID_, room : room_, order : order_, value : value_};
+            document.getElementById('msg').value = JSON.stringify(obj);
+        }
+
+        var host = window.document.location.host.replace(/:.*/, '');
+        var ws = new WebSocket('ws://' + host + ':443');
+        ws.onmessage = function (event) {
+            console.log(event.data);
+            document.getElementById("messages").innerHTML += "<div>" + event.data + "</div>";
+        };
+    </script>
+
+    <!-- スタイルシート -->
+    <style type="text/css">
+        #msg {
+            width: 80%;
+            height : 25px;
+        }
+        #sendButton {
+            width: 18%;
+            height : 25px;
+        }
+        #sendMes {
+            color:red;
+        }
+        #inputSupport {
+            width: 16%;
+            height : auto;
+            float: left;
+        }
+        #textSupport {
+            font-size: 10px;
+        }
+        #textButton {
+            margin-left: 10%;
+            margin-right: 10%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- コンテンツ -->
+    <input type="text" id="msg"/>
+    <input type="button" id="sendButton" value="send" onclick="send()"/>
+    <br>
+    <div id="textSupport">authCode</div>
+    <input type="text" id="authCode_" style="width:80%"/>
+    <br>
+    <div id="inputSupport">
+        <div id="textSupport">name</div>
+        <input type="text" id="name_" style="width:100%"/>
+    </div>
+    <div id="inputSupport">
+        <div id="textSupport">steamID</div>
+        <input type="text" id="steamID_" style="width:100%"/>
+    </div>
+    <div id="inputSupport">
+        <div id="textSupport">room</div>
+        <input type="text" id="room_" style="width:100%"/>
+    </div>
+    <div id="inputSupport">
+        <div id="textSupport">order</div>
+        <input type="text" id="order_" style="width:100%"/>
+    </div>
+    <div id="inputSupport">
+        <div id="textSupport">value</div>
+        <input type="text" id="value_" style="width:100%"/>
+    </div>    
+    <div id="inputSupport">
+        <input type="button" style="width:100%" id="textButton" value="make" onclick="makeText()"/>
+    </div>
+    <br style="clear:both">
+    <hr>
+    <div id="messages"></div>
+</body>
+</html>
+
